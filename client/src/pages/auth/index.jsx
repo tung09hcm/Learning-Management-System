@@ -2,6 +2,8 @@ import { GraduationCap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; 
 import { useState } from "react";
+import CommonForm from "@/components/components-form";
+import { signUpFormControls, signInFormControls } from "@/config";
 
 function Auth(){
     const [activeTab, setActiveTab] = useState('sigin');  
@@ -19,15 +21,19 @@ function Auth(){
             <div className="flex items-center justify-center min-h-screen bg-background">
                 <Tabs value={activeTab} defaultValue="signin" onValueChange={handleTabChange} className = "w-full max-w-md">
                     <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="signin">
+                        <TabsTrigger value="signin">    
                             Sign In
                         </TabsTrigger>
                         <TabsTrigger value="signup">
                             Sign Up
                         </TabsTrigger>
                     </TabsList>
-                    <TabsContent value = "signin">signin</TabsContent>
-                    <TabsContent value = "signup">signup</TabsContent>
+                    <TabsContent value = "signin">
+                    <CommonForm formControls={signInFormControls}></CommonForm>   
+                    </TabsContent>
+                    <TabsContent value = "signup">
+                        <CommonForm formControls={signUpFormControls}></CommonForm>
+                    </TabsContent>
                 </Tabs>
             </div>
         </div>
