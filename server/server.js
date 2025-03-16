@@ -6,6 +6,8 @@ const connectMongoDB = require('./db/connectDB');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const authRouter = require('./routes/auth-routes');
+
 // Cấu hình CORS
 app.use(
     cors({
@@ -26,6 +28,8 @@ app.use((err, req, res, next) => {
 });
 
 // Routes xử lý request
+app.use('/auth', authRouter);
+
 // Khởi động server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

@@ -9,7 +9,7 @@ import { AuthContext } from "@/context/auth-context";
 
 function Auth(){
     const [activeTab, setActiveTab] = useState('sigin');  
-    const {signInFormData,  setSignInFormData, signUpFormData,  setSignUpFormData} = useContext(AuthContext);
+    const {signInFormData,  setSignInFormData, signUpFormData,  setSignUpFormData, handleRegisterUser} = useContext(AuthContext);
     function handleTabChange(value){
         setActiveTab(value);
     }
@@ -75,6 +75,7 @@ function Auth(){
                                         formData={signUpFormData}
                                         setFormData={setSignUpFormData}
                                         isButtonDisabled={isSigupFormValid()}
+                                        handleSubmit={handleRegisterUser}
                                     ></CommonForm>
                                 </CardContent>
                             </CardHeader>
