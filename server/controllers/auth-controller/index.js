@@ -1,5 +1,7 @@
+require('dotenv').config();
 const User = require('../../models/User');
 const bycrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const registerUser = async (req, res) => {
     const { userName, userEmail, password, role } = req.body;
     const existingUser = await User.findOne({ $or: [{ userName }, { userEmail }] });
@@ -18,4 +20,37 @@ const registerUser = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-module.exports = { registerUser };
+const loginUser = async (req,res) => {
+    console.log("JWT TOKEN: ", process.env.JWT_SECRET)
+    const {userEmail, password} = req.body;
+    const existingUser = await User.findOne({userEmail})
+    if(!existingUser || !(bycrypt.compare(password,existingUser.password)))
+    {
+        return res.status(401).json({
+            success: false,
+            message: 'Invalid credentials',
+        });
+    }
+    const accessToken = jwt.sign({
+        _id: existingUser._id,
+        userName: existingUser.userName,
+        userEmail: existingUser.userEmail,
+        role: existingUser.role
+    }, process.env.JWT_SECRET, {expiresIn: '360m'})
+
+    res.status(200).json({
+        success: true,
+        message: 'Logged in successfully',
+        data: {
+            accessToken,
+            user: {
+                _id: existingUser._id,
+                userName: existingUser.userName,
+                userEmail: existingUser.userEmail,
+                role: existingUser.role
+            }
+        }
+    })
+}
+
+module.exports = { registerUser, loginUser };
