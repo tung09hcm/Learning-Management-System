@@ -2,6 +2,7 @@
 import { createContext, useState, useEffect } from 'react';
 import { initialSignInFormData, initialSignUpFormData } from '@/config';
 import {registerService, loginService, checkAuth } from '@/services';
+import { Skeleton } from '@/components/ui/skeleton';
 export const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {  
@@ -12,6 +13,8 @@ export default function AuthProvider({ children }) {
         authenticate: false,
         user: null
     })
+
+    const [loading, setLoading] = useState(true);
 
     async function handleRegisterUser(event) {
         event.preventDefault();
@@ -40,23 +43,36 @@ export default function AuthProvider({ children }) {
         }
     }
     async function checkAuthUser(){
-        const data = await checkAuth();
-        console.log("data in checkAuth", data);
-        if(data.data.success)
-        {
-            console.log("check Auth thành công")
-            setAuth({
-                authenticate: true,
-                user: data.data.data.user
-            })
+        try{
+            const data = await checkAuth();
+            console.log("data in checkAuth", data);
+            if(data.data.success)
+            {
+                console.log("check Auth thành công")
+                setAuth({
+                    authenticate: true,
+                    user: data.data.data.user
+                });
+                setLoading(false);
+            }
+            else{
+                console.log("check Auth ko thành công")
+                setAuth({
+                    authenticate: false,
+                    user: null
+                })
+                setLoading(false);
         }
-        else{
+        }catch(error){
+            console.log(error)
             console.log("check Auth ko thành công")
             setAuth({
                 authenticate: false,
                 user: null
             })
+            setLoading(false);
         }
+        
     }
     useEffect(()=>{
         checkAuthUser();
@@ -64,7 +80,8 @@ export default function AuthProvider({ children }) {
     console.log(auth)
     return <AuthContext.Provider value={
         {signInFormData,  setSignInFormData, signUpFormData,  setSignUpFormData, 
-            handleLoginUser,handleRegisterUser
+            handleLoginUser,handleRegisterUser, auth
         }
-    }>{children}</AuthContext.Provider>;
+    }>{loading ? <Skeleton/> : children}
+    </AuthContext.Provider>;
 }
