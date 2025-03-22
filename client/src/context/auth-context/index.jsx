@@ -74,13 +74,19 @@ export default function AuthProvider({ children }) {
         }
         
     }
+    function resetCredentials(){
+        setAuth({
+            authenticate: false,
+            user: null
+        })
+    }
     useEffect(()=>{
         checkAuthUser();
     },[])
     console.log(auth)
     return <AuthContext.Provider value={
         {signInFormData,  setSignInFormData, signUpFormData,  setSignUpFormData, 
-            handleLoginUser,handleRegisterUser, auth
+            handleLoginUser,handleRegisterUser, auth, resetCredentials
         }
     }>{loading ? <Skeleton/> : children}
     </AuthContext.Provider>;
