@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 const authRouter = require('./routes/auth-routes');
-
+const mediaRouter = require('./routes/instructor-routes/media-routes');
 // Cấu hình CORS
 app.use(
     cors({
@@ -29,7 +29,7 @@ app.use((err, req, res, next) => {
 
 // Routes xử lý request
 app.use('/auth', authRouter);
-
+app.use('/media', mediaRouter);
 // Khởi động server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
